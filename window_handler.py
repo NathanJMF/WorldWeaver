@@ -1,6 +1,8 @@
 import customtkinter
 import PIL
 
+from map_tooling import overworld_generator
+
 app_window_name = "World Weaver"
 app_window_resolution = "1366x768"
 logo_path = "assets/logo.png"
@@ -31,6 +33,8 @@ class WorldWeaverWindow(customtkinter.CTk):
         # Initially display the home page
         self.home_page.pack(fill="both", expand=True)
 
+    # -----------------------------------------------------------------------------------------------------------------
+    # HOME PAGE
     def setup_home_page(self):
         create_world_button_text = "Create new world"
         open_world_button_text = "Open existing world"
@@ -47,23 +51,29 @@ class WorldWeaverWindow(customtkinter.CTk):
         customtkinter.CTkButton(self.home_page, text=open_world_button_text,
                                 command=self.show_existing_world_page).pack(pady=10)
 
-    def setup_new_world_page(self):
-        customtkinter.CTkButton(self.new_world_page, text="Back",
-                                command=self.show_home_page).pack(pady=10)
-
-    def setup_existing_world_page(self):
-        customtkinter.CTkButton(self.existing_world_page, text="Back",
-                                command=self.show_home_page).pack(pady=10)
-
     def show_home_page(self):
         self.new_world_page.pack_forget()
         self.existing_world_page.pack_forget()
         self.home_page.pack(fill="both", expand=True)
 
+    # -----------------------------------------------------------------------------------------------------------------
+    # NEW WORLD PAGE
+    def setup_new_world_page(self):
+        overworld_generator.generate_overworld()
+        customtkinter.CTkButton(self.new_world_page, text="Back",
+                                command=self.show_home_page).pack(pady=10)
+
     def show_new_world_page(self):
         self.home_page.pack_forget()
         self.new_world_page.pack(fill="both", expand=True)
 
+    # -----------------------------------------------------------------------------------------------------------------
+    # EXISTING WORLD PAGE
+    def setup_existing_world_page(self):
+        customtkinter.CTkButton(self.existing_world_page, text="Back",
+                                command=self.show_home_page).pack(pady=10)
+
     def show_existing_world_page(self):
         self.home_page.pack_forget()
         self.existing_world_page.pack(fill="both", expand=True)
+    # -----------------------------------------------------------------------------------------------------------------
