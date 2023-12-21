@@ -3,49 +3,68 @@ from PIL import Image
 
 app_window_name = "World Weaver"
 app_window_resolution = "1366x768"
-logo_path = "logo.png"  # Replace with the path to your logo image
+logo_path = "logo.png"
+icon_path = "icon.ico"
 
 
 class WorldWeaverWindow(customtkinter.CTk):
     def __init__(self):
         super().__init__()
+        self.logo_label = None
+        self.logo_photo_image = None
+        self.logo_image = None
         self.title(app_window_name)
         self.geometry(app_window_resolution)
+        self.iconbitmap(icon_path)
+        # Initialise main frame that will hold the other frames
+        self.main_frame = customtkinter.CTkFrame(self)
+        self.main_frame.pack(fill="both", expand=True)
+        # Home Page
+        self.home_page = customtkinter.CTkFrame(self.main_frame)
+        self.setup_home_page()
+        # New World Page
+        self.new_world_page = customtkinter.CTkFrame(self.main_frame)
+        self.setup_new_world_page()
+        # Existing World Page
+        self.existing_world_page = customtkinter.CTkFrame(self.main_frame)
+        self.setup_existing_world_page()
+        # Initially display the home page
+        self.home_page.pack(fill="both", expand=True)
 
+    def setup_home_page(self):
         # Load the logo image
         self.logo_image = Image.open(logo_path)
         self.logo_photo_image = customtkinter.CTkImage(self.logo_image, size=(500, 500))
+        # Create a label for the logo in the home page frame
+        self.logo_label = customtkinter.CTkLabel(self.home_page, text="", image=self.logo_photo_image)
+        self.logo_label.pack(pady=20)  # Use pack instead of grid
+        # Create new world button in the home page frame
+        customtkinter.CTkButton(self.home_page, text="Create new world!",
+                                command=self.show_new_world_page).pack(pady=10)
+        # Open existing world button in the home page frame
+        customtkinter.CTkButton(self.home_page, text="Open existing world!",
+                                command=self.show_existing_world_page).pack(pady=10)
 
-        # Configure the grid layout
-        self.grid_columnconfigure(0, weight=1)
-        self.grid_columnconfigure(1, weight=0)
-        self.grid_columnconfigure(2, weight=1)
+    def setup_new_world_page(self):
+        customtkinter.CTkButton(self.new_world_page, text="Back",
+                                command=self.show_home_page).pack(pady=10)
 
-        self.grid_rowconfigure(0, weight=1)
-        self.grid_rowconfigure(1, weight=0)
-        self.grid_rowconfigure(2, weight=0)
-        self.grid_rowconfigure(3, weight=1)
-        self.grid_rowconfigure(4, weight=1)
+    def setup_existing_world_page(self):
+        customtkinter.CTkButton(self.existing_world_page, text="Back",
+                                command=self.show_home_page).pack(pady=10)
 
-        # Create a label for the logo
-        self.logo_label = customtkinter.CTkLabel(self, text="", image=self.logo_photo_image)
-        self.logo_label.grid(row=0, column=1, pady=20)
+    def show_home_page(self):
+        self.new_world_page.pack_forget()
+        self.existing_world_page.pack_forget()
+        self.home_page.pack(fill="both", expand=True)
 
-        # Create new world button
-        self.new_world_button = customtkinter.CTkButton(self, text="Create new world!",
-                                                        command=self.create_new_world_button)
-        self.new_world_button.grid(row=1, column=1, padx=20, pady=5, sticky="nsew")
+    def show_new_world_page(self):
+        self.home_page.pack_forget()
+        self.new_world_page.pack(fill="both", expand=True)
 
-        # Open existing world button
-        self.open_world_button = customtkinter.CTkButton(self, text="Open existing world!",
-                                                         command=self.open_existing_world_button)
-        self.open_world_button.grid(row=2, column=1, padx=20, pady=20, sticky="nsew")
-
-    def create_new_world_button(self):
-        print("Create new world!")
-
-    def open_existing_world_button(self):
-        print("Open existing world!")
+    def show_existing_world_page(self):
+        self.home_page.pack_forget()
+        self.existing_world_page.pack(fill="both", expand=True)
 
 
 # Create and run the application window
