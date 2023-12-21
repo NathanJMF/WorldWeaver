@@ -35,6 +35,7 @@ class WorldWeaverWindow(customtkinter.CTk):
 
     # -----------------------------------------------------------------------------------------------------------------
     # HOME PAGE
+    # -----------------------------------------------------------------------------------------------------------------
     def setup_home_page(self):
         create_world_button_text = "Create new world"
         open_world_button_text = "Open existing world"
@@ -58,10 +59,12 @@ class WorldWeaverWindow(customtkinter.CTk):
 
     # -----------------------------------------------------------------------------------------------------------------
     # NEW WORLD PAGE
+    # -----------------------------------------------------------------------------------------------------------------
     def setup_new_world_page(self):
-        overworld_generator.generate_overworld()
         customtkinter.CTkButton(self.new_world_page, text="Back",
                                 command=self.show_home_page).pack(pady=10)
+        customtkinter.CTkButton(self.new_world_page, text="Generate noise map",
+                                command=overworld_generator.generate_overworld()).pack(pady=10)
 
     def show_new_world_page(self):
         self.home_page.pack_forget()
@@ -69,6 +72,7 @@ class WorldWeaverWindow(customtkinter.CTk):
 
     # -----------------------------------------------------------------------------------------------------------------
     # EXISTING WORLD PAGE
+    # -----------------------------------------------------------------------------------------------------------------
     def setup_existing_world_page(self):
         customtkinter.CTkButton(self.existing_world_page, text="Back",
                                 command=self.show_home_page).pack(pady=10)
