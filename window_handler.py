@@ -1,6 +1,6 @@
 import customtkinter
 import PIL
-from map_tooling import overworld_generator
+from map_tooling import over_world_generator
 
 app_window_name = "World Weaver"
 app_window_width = 1920
@@ -135,10 +135,10 @@ class WorldWeaverWindow(customtkinter.CTk):
         octaves_value = int(self.octaves_slider.get())
         persistence_value = self.persistence_slider.get()
         lacunarity_value = self.lacunarity_slider.get()
-        # Generate the overworld map
-        noise_map = overworld_generator.generate_noise_map(1024, 1024, scale_value, octaves_value, persistence_value, lacunarity_value)
-        normalized_map = overworld_generator.normalize_map(noise_map)
-        self.map_image = overworld_generator.create_image(normalized_map)
+        # Generate the over_world map
+        noise_map = over_world_generator.generate_noise_map(1024, 1024, scale_value, octaves_value, persistence_value, lacunarity_value)
+        normalized_map = over_world_generator.normalize_map(noise_map)
+        self.map_image = over_world_generator.create_image(normalized_map)
         # Convert the PIL image to a format that can be used in Tkinter
         tk_image = customtkinter.CTkImage(self.map_image, size=(self.right_panel_width, app_window_height))
         # Update the label to show the map
@@ -148,7 +148,7 @@ class WorldWeaverWindow(customtkinter.CTk):
 
     def save_noise_map(self):
         file_name_to_use = self.map_name_entry.get()
-        overworld_generator.save_image(self.map_image, file_name_to_use)
+        over_world_generator.save_image(self.map_image, file_name_to_use)
 
     def show_new_world_page(self):
         self.home_page.pack_forget()

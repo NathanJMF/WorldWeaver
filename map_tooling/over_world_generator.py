@@ -3,7 +3,7 @@ import numpy as np
 from PIL import Image
 
 
-def generate_overworld(scale, octaves, persistence, lacunarity):
+def generate_over_world(scale, octaves, persistence, lacunarity):
     width, height = 1024, 1024
     noise_map = generate_noise_map(width, height, scale, octaves, persistence, lacunarity)
     normalized_map = normalize_map(noise_map)
