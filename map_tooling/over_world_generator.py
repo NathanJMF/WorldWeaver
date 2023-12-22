@@ -1,13 +1,7 @@
 import noise
 import numpy as np
 from PIL import Image
-
-
-def generate_over_world(scale, octaves, persistence, lacunarity):
-    width, height = 1024, 1024
-    noise_map = generate_noise_map(width, height, scale, octaves, persistence, lacunarity)
-    normalized_map = normalize_map(noise_map)
-    return create_image(normalized_map)
+from map_tooling import _helpers
 
 
 def generate_noise_map(width, height, scale, octaves, persistence, lacunarity):
@@ -34,6 +28,6 @@ def create_image(noise_map):
     return image
 
 
-def save_image(image, file_name):
-    file_name = f"./saves/{file_name}.png"
-    image.save(file_name)
+def save_height_map(image, save_name):
+    image_type = "height_map"
+    _helpers.create_save(image, save_name, image_type)

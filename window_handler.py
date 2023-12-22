@@ -90,28 +90,40 @@ class WorldWeaverWindow(customtkinter.CTk):
         # Back Button
         back_button = customtkinter.CTkButton(left_panel, text="Back", command=self.show_home_page,
                                               width=left_panel_input_width)
-        back_button.pack(pady=back_button_padding)
+        back_button.pack(pady=(back_button_padding, 5))
         # Map Name Field
         self.map_name_entry = customtkinter.CTkEntry(left_panel, placeholder_text="Enter map name",
                                                      width=left_panel_input_width)
         self.map_name_entry.pack(pady=5)
         # Sliders for noise map variables
         # Scale Slider
+        customtkinter.CTkLabel(left_panel, text="World Size", anchor="w").pack(pady=(5, 0),
+                                                                               padx=back_button_padding,
+                                                                               fill="x")
         self.scale_slider = customtkinter.CTkSlider(left_panel, from_=10, to=500, width=left_panel_input_width)
         self.scale_slider.set(100)  # Default value
-        self.scale_slider.pack(pady=5)
+        self.scale_slider.pack(pady=(0, 5))
 
         # Octaves Slider
+        customtkinter.CTkLabel(left_panel, text="Terrain Complexity", anchor="w").pack(pady=(5, 0),
+                                                                                       padx=back_button_padding,
+                                                                                       fill="x")
         self.octaves_slider = customtkinter.CTkSlider(left_panel, from_=1, to=10, width=left_panel_input_width)
         self.octaves_slider.set(6)  # Default value
         self.octaves_slider.pack(pady=5)
 
         # Persistence Slider
+        customtkinter.CTkLabel(left_panel, text="Landscape Variation", anchor="w").pack(pady=(5, 0),
+                                                                                        padx=back_button_padding,
+                                                                                        fill="x")
         self.persistence_slider = customtkinter.CTkSlider(left_panel, from_=0, to=1, width=left_panel_input_width)
         self.persistence_slider.set(0.5)  # Default value
         self.persistence_slider.pack(pady=5)
 
         # Lacunarity Slider
+        customtkinter.CTkLabel(left_panel, text="Geographical Roughness", anchor="w").pack(pady=(5, 0),
+                                                                                           padx=back_button_padding,
+                                                                                           fill="x")
         self.lacunarity_slider = customtkinter.CTkSlider(left_panel, from_=1, to=4, width=left_panel_input_width)
         self.lacunarity_slider.set(2.0)  # Default value
         self.lacunarity_slider.pack(pady=5)
@@ -136,7 +148,8 @@ class WorldWeaverWindow(customtkinter.CTk):
         persistence_value = self.persistence_slider.get()
         lacunarity_value = self.lacunarity_slider.get()
         # Generate the over_world map
-        noise_map = over_world_generator.generate_noise_map(1024, 1024, scale_value, octaves_value, persistence_value, lacunarity_value)
+        noise_map = over_world_generator.generate_noise_map(1024, 1024, scale_value, octaves_value,
+                                                            persistence_value, lacunarity_value)
         normalized_map = over_world_generator.normalize_map(noise_map)
         self.map_image = over_world_generator.create_image(normalized_map)
         # Convert the PIL image to a format that can be used in Tkinter
@@ -148,7 +161,7 @@ class WorldWeaverWindow(customtkinter.CTk):
 
     def save_noise_map(self):
         file_name_to_use = self.map_name_entry.get()
-        over_world_generator.save_image(self.map_image, file_name_to_use)
+        over_world_generator.save_height_map(self.map_image, file_name_to_use)
 
     def show_new_world_page(self):
         self.home_page.pack_forget()
