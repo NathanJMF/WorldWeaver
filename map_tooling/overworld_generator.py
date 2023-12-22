@@ -3,11 +3,11 @@ import numpy as np
 from PIL import Image
 
 
-def generate_overworld(file_name, scale, octaves, persistence, lacunarity):
+def generate_overworld(scale, octaves, persistence, lacunarity):
     width, height = 1024, 1024
     noise_map = generate_noise_map(width, height, scale, octaves, persistence, lacunarity)
     normalized_map = normalize_map(noise_map)
-    create_image(normalized_map, file_name)
+    return create_image(normalized_map)
 
 
 def generate_noise_map(width, height, scale, octaves, persistence, lacunarity):
@@ -28,8 +28,12 @@ def normalize_map(noise_map):
     return (noise_map - min_val) / (max_val - min_val) * 255
 
 
-def create_image(noise_map, filename):
-    filename = f"./saves/{filename}.png"
+def create_image(noise_map):
     image = Image.fromarray(noise_map)
     image = image.convert('L')  # Convert to grayscale
-    image.save(filename)
+    return image
+
+
+def save_image(image, file_name):
+    file_name = f"./saves/{file_name}.png"
+    image.save(file_name)

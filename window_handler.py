@@ -13,6 +13,8 @@ icon_path = "assets/icon.ico"
 class WorldWeaverWindow(customtkinter.CTk):
     def __init__(self):
         super().__init__()
+        self.right_panel_width = None
+        self.map_image = None
         self.persistence_slider = None
         self.octaves_slider = None
         self.scale_slider = None
@@ -73,6 +75,7 @@ class WorldWeaverWindow(customtkinter.CTk):
         left_panel_input_coverage = 0.95
 
         left_panel_width = int(left_panel_screen_coverage * app_window_width)
+        self.right_panel_width = int(app_window_width - left_panel_width)
         left_panel_input_width = int(left_panel_width * left_panel_input_coverage)
         back_button_padding = left_panel_width - left_panel_input_width
 
@@ -129,14 +132,23 @@ class WorldWeaverWindow(customtkinter.CTk):
 
     def preview_noise_map(self):
         scale_value = int(self.scale_slider.get())
-        octaves_value = self.octaves_slider.get()
+        octaves_value = int(self.octaves_slider.get())
         persistence_value = self.persistence_slider.get()
         lacunarity_value = self.lacunarity_slider.get()
-        file_name_to_use = self.map_name_entry.get()
-        overworld_generator.generate_overworld(file_name_to_use, scale_value, octaves_value, persistence_value, lacunarity_value)
+        # Generate the overworld map
+        noise_map = overworld_generator.generate_noise_map(1024, 1024, scale_value, octaves_value, persistence_value, lacunarity_value)
+        normalized_map = overworld_generator.normalize_map(noise_map)
+        self.map_image = overworld_generator.create_image(normalized_map)
+        # Convert the PIL image to a format that can be used in Tkinter
+        tk_image = customtkinter.CTkImage(self.map_image, size=(self.right_panel_width, app_window_height))
+        # Update the label to show the map
+        self.map_preview_label.configure(text="")
+        self.map_preview_label.configure(image=tk_image)
+        self.map_preview_label.image = tk_image
 
     def save_noise_map(self):
-        pass
+        file_name_to_use = self.map_name_entry.get()
+        overworld_generator.save_image(self.map_image, file_name_to_use)
 
     def show_new_world_page(self):
         self.home_page.pack_forget()
