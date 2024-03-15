@@ -151,7 +151,8 @@ class WorldWeaverWindow(customtkinter.CTk):
         noise_map = over_world_generator.generate_noise_map(1024, 1024, scale_value, octaves_value,
                                                             persistence_value, lacunarity_value)
         normalized_map = over_world_generator.normalize_map(noise_map)
-        self.map_image = over_world_generator.create_image(normalized_map)
+        # self.map_image = over_world_generator.create_image(normalized_map)
+        self.map_image = over_world_generator.create_coloured_image(normalized_map)
         # Convert the PIL image to a format that can be used in Tkinter
         tk_image = customtkinter.CTkImage(self.map_image, size=(self.right_panel_width, app_window_height))
         # Update the label to show the map
