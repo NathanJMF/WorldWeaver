@@ -14,7 +14,8 @@ class WorldWeaverWindow(customtkinter.CTk):
     def __init__(self):
         super().__init__()
         self.right_panel_width = None
-        self.map_image = None
+        self.coloured_map_image = None
+        self.height_map_image = None
         self.persistence_slider = None
         self.octaves_slider = None
         self.scale_slider = None
@@ -129,11 +130,11 @@ class WorldWeaverWindow(customtkinter.CTk):
         self.lacunarity_slider.pack(pady=5)
 
         # Button to preview the noise map
-        customtkinter.CTkButton(left_panel, text="Preview Noise Map", command=self.preview_noise_map,
+        customtkinter.CTkButton(left_panel, text="Preview Map", command=self.preview_map,
                                 width=left_panel_input_width).pack(pady=5)
 
         # Button to save the noise map
-        customtkinter.CTkButton(left_panel, text="Save Noise Map", command=self.save_noise_map,
+        customtkinter.CTkButton(left_panel, text="Save Map", command=self.save_map,
                                 width=left_panel_input_width).pack(pady=5)
 
         # Placeholder for map preview in the right panel
@@ -142,7 +143,7 @@ class WorldWeaverWindow(customtkinter.CTk):
         left_panel.pack(side='left', fill='y')
         right_panel.pack(side='right', fill='both', expand=True)
 
-    def preview_noise_map(self):
+    def preview_map(self):
         scale_value = int(self.scale_slider.get())
         octaves_value = int(self.octaves_slider.get())
         persistence_value = self.persistence_slider.get()
@@ -151,18 +152,19 @@ class WorldWeaverWindow(customtkinter.CTk):
         noise_map = over_world_generator.generate_noise_map(1024, 1024, scale_value, octaves_value,
                                                             persistence_value, lacunarity_value)
         normalized_map = over_world_generator.normalize_map(noise_map)
-        # self.map_image = over_world_generator.create_image(normalized_map)
-        self.map_image = over_world_generator.create_coloured_image(normalized_map)
+        self.height_map_image = over_world_generator.create_image(normalized_map)
+        self.coloured_map_image = over_world_generator.create_coloured_image(normalized_map)
         # Convert the PIL image to a format that can be used in Tkinter
-        tk_image = customtkinter.CTkImage(self.map_image, size=(self.right_panel_width, app_window_height))
+        tk_image = customtkinter.CTkImage(self.coloured_map_image, size=(self.right_panel_width, app_window_height))
         # Update the label to show the map
         self.map_preview_label.configure(text="")
         self.map_preview_label.configure(image=tk_image)
         self.map_preview_label.image = tk_image
 
-    def save_noise_map(self):
+    def save_map(self):
         file_name_to_use = self.map_name_entry.get()
-        over_world_generator.save_height_map(self.map_image, file_name_to_use)
+        over_world_generator.save_height_map(self.height_map_image, file_name_to_use)
+        over_world_generator.save_coloured_map(self.coloured_map_image, file_name_to_use)
 
     def show_new_world_page(self):
         self.home_page.pack_forget()

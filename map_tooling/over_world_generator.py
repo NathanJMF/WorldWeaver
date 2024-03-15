@@ -33,6 +33,11 @@ def save_height_map(image, save_name):
     _helpers.create_save(image, save_name, image_type)
 
 
+def save_coloured_map(image, save_name):
+    image_type = "coloured_map"
+    _helpers.create_save(image, save_name, image_type)
+
+
 def create_coloured_image(noise_map):
     print("entering")
     height, width = noise_map.shape
