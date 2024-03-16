@@ -13,7 +13,14 @@ icon_path = "assets/icon.ico"
 class WorldWeaverWindow(customtkinter.CTk):
     def __init__(self):
         super().__init__()
+        self.view_buttons_frame = None
+        self.resized_coloured_map_image = None
+        self.resized_height_map_image = None
+        self.view_height_map_button = None
+        self.view_coloured_map_button = None
         self.right_panel_width = None
+        self.map_image_width = None
+        self.map_image_height = None
         self.coloured_map_image = None
         self.height_map_image = None
         self.persistence_slider = None
@@ -162,17 +169,31 @@ class WorldWeaverWindow(customtkinter.CTk):
         display_height = int(display_width * aspect_ratio)
 
         # Resize the image to fit in the display area while maintaining aspect ratio
-        resized_height_map_image = self.height_map_image.resize((display_width, display_height),
-                                                                Image.Resampling.LANCZOS)
-        resized_coloured_map_image = self.coloured_map_image.resize((display_width, display_height),
-                                                                    Image.Resampling.LANCZOS)
+        self.resized_height_map_image = self.height_map_image.resize((display_width, display_height),
+                                                                     Image.Resampling.LANCZOS)
+        self.resized_coloured_map_image = self.coloured_map_image.resize((display_width, display_height),
+                                                                         Image.Resampling.LANCZOS)
 
-        # Convert the PIL image to a format that can be used in Tkinter
-        tk_image = customtkinter.CTkImage(resized_coloured_map_image, size=(display_width, display_height))
+        self.map_image_width = display_width
+        self.map_image_height = display_height
+
         # Update the label to show the map
         self.map_preview_label.configure(text="")
-        self.map_preview_label.configure(image=tk_image)
-        self.map_preview_label.image = tk_image
+        self.view_coloured_map()
+
+    def view_height_map(self):
+        if hasattr(self, 'height_map_image'):
+            tk_image = customtkinter.CTkImage(self.resized_height_map_image, size=(self.map_image_width,
+                                                                                   self.map_image_height))
+            self.map_preview_label.configure(image=tk_image)
+            self.map_preview_label.image = tk_image
+
+    def view_coloured_map(self):
+        if hasattr(self, 'coloured_map_image'):
+            tk_image = customtkinter.CTkImage(self.resized_coloured_map_image, size=(self.map_image_width,
+                                                                                     self.map_image_height))
+            self.map_preview_label.configure(image=tk_image)
+            self.map_preview_label.image = tk_image
 
     def save_map(self):
         file_name_to_use = self.map_name_entry.get()
