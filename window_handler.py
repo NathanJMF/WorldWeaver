@@ -1,5 +1,5 @@
 import customtkinter
-import PIL
+from PIL import Image
 from map_tooling import over_world_generator
 
 app_window_name = "World Weaver"
@@ -50,7 +50,7 @@ class WorldWeaverWindow(customtkinter.CTk):
         create_world_button_text = "Create new world"
         open_world_button_text = "Open existing world"
         # Load the logo image
-        self.logo_image = PIL.Image.open(logo_path)
+        self.logo_image = Image.open(logo_path)
         self.logo_photo_image = customtkinter.CTkImage(self.logo_image, size=(500, 500))
         # Create a label for the logo in the home page frame
         self.logo_label = customtkinter.CTkLabel(self.home_page, text="", image=self.logo_photo_image)
@@ -149,13 +149,26 @@ class WorldWeaverWindow(customtkinter.CTk):
         persistence_value = self.persistence_slider.get()
         lacunarity_value = self.lacunarity_slider.get()
         # Generate the over_world map
-        noise_map = over_world_generator.generate_noise_map(1024, 1024, scale_value, octaves_value,
+        noise_map = over_world_generator.generate_noise_map(2048, 2048, scale_value, octaves_value,
                                                             persistence_value, lacunarity_value)
         normalized_map = over_world_generator.normalize_map(noise_map)
         self.height_map_image = over_world_generator.create_image(normalized_map)
         self.coloured_map_image = over_world_generator.create_coloured_image(normalized_map)
+
+        # Calculate new height to maintain aspect ratio
+        original_width, original_height = self.coloured_map_image.size
+        display_width = self.right_panel_width
+        aspect_ratio = original_height / original_width
+        display_height = int(display_width * aspect_ratio)
+
+        # Resize the image to fit in the display area while maintaining aspect ratio
+        resized_height_map_image = self.height_map_image.resize((display_width, display_height),
+                                                                Image.Resampling.LANCZOS)
+        resized_coloured_map_image = self.coloured_map_image.resize((display_width, display_height),
+                                                                    Image.Resampling.LANCZOS)
+
         # Convert the PIL image to a format that can be used in Tkinter
-        tk_image = customtkinter.CTkImage(self.coloured_map_image, size=(self.right_panel_width, app_window_height))
+        tk_image = customtkinter.CTkImage(resized_coloured_map_image, size=(display_width, display_height))
         # Update the label to show the map
         self.map_preview_label.configure(text="")
         self.map_preview_label.configure(image=tk_image)
