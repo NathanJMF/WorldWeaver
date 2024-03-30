@@ -44,6 +44,7 @@ def create_coloured_image(noise_map):
     pixels = coloured_image.load()
 
     # Define height range thresholds
+    dark_water_upper = 70
     water_upper = 90
     sand_upper = 120
     dirt_upper = 140
@@ -53,7 +54,9 @@ def create_coloured_image(noise_map):
     for y in range(height):
         for x in range(width):
             height_value = noise_map[y, x]
-            if height_value <= water_upper:  # Water
+            if height_value <= dark_water_upper:  # Dark Water
+                colour = (0, 0, 180)
+            elif height_value <= water_upper:  # Water
                 colour = (0, 0, 255)
             elif height_value <= sand_upper:  # Sand
                 colour = (194, 178, 128)
